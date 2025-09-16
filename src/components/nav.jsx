@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, lazy, Suspense } from "react";
-import { Menu, X, Sun, Moon } from "lucide-react";
+// Import new icons for the dropdown menu
+import { Menu, X, Sun, Moon, User, Settings, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,9 +10,13 @@ const Logo = lazy(() => import('./Logo'));
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // NEW: State to manage the profile dropdown
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const location = useLocation();
   const menuRef = useRef(null);
+  // NEW: Ref for the profile dropdown to detect outside clicks
+  const profileMenuRef = useRef(null);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -23,7 +28,7 @@ export default function Navbar() {
       timeoutId = setTimeout(() => {
         setIsScrolled(window.scrollY > 20);
       }, 10);
-  };
+    };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -31,19 +36,26 @@ export default function Navbar() {
     };
   }, []);
 
+  // Combined Click Outside handler for both mobile and profile menus
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
       }
+      // NEW: Close profile menu if click is outside
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setIsProfileMenuOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);  
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    // For demonstration, I'm setting isLoggedIn to true. 
+    // In your actual app, you would use: setIsLoggedIn(!!token);
+    setIsLoggedIn(true); 
   }, []);
 
   const toggleDarkMode = () => {
@@ -64,7 +76,8 @@ export default function Navbar() {
     { to: "/contact", label: "Contact" },
     { to: "/report", label: "Report Issue" },
     { to: "/track-my-report", label: "Track My Report" },
-    { to: "/trending-issue", label: "Trending Local Issue" },
+    { to: "/trending-issue", label: "Trending Issues" },
+    { to: "/dashboard", label: "Staff Dashboard" },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -81,7 +94,9 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setIsLoggedIn(false);
+    setIsProfileMenuOpen(false); // Close menu on logout
     navigate('/login');
   };
 
@@ -110,7 +125,7 @@ export default function Navbar() {
                 <Logo />
               </Suspense>
               <span className="text-xl font-bold text-gray-900 dark:text-white tracking-wide">
-                Bhumiconnect
+                CivicTrack
               </span>
             </Link>
           </motion.div>
@@ -120,7 +135,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <motion.div
                 key={link.to}
-                whileHover={{ y: -2, scale: 1.08, backgroundColor: "#e5f4ed" }}
+                whileHover={{ y: -2, scale: 1.08, backgroundColor: "#e6f3ff" }}
                 transition={{ duration: 0.2 }}
                 className="relative rounded-lg px-2 py-1"
               >
@@ -128,15 +143,15 @@ export default function Navbar() {
                   to={link.to}
                   className={`text-sm font-semibold transition-colors duration-200 ${
                     isActive(link.to)
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                   }`}
                 >
                   {link.label}
                   {isActive(link.to) && (
                     <motion.div
                       layoutId="activeIndicator"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-600 dark:bg-green-400 rounded"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded"
                     />
                   )}
                 </Link>
@@ -152,8 +167,8 @@ export default function Navbar() {
               onClick={toggleDarkMode}
               className={`p-2 rounded-full border-2 transition-all duration-200 focus:outline-none ${
                 isDarkMode
-                  ? 'bg-gray-900 border-green-400 text-yellow-300 shadow-lg'
-                  : 'bg-white border-green-600 text-green-600 shadow-lg'
+                  ? 'bg-gray-900 border-blue-400 text-yellow-300 shadow-lg'
+                  : 'bg-white border-blue-600 text-blue-600 shadow-lg'
               }`}
               aria-label="Toggle dark mode"
               title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
@@ -161,34 +176,95 @@ export default function Navbar() {
               {isDarkMode ? <Sun size={22} /> : <Moon size={22} />}
             </motion.button>
 
+            {/* --- MODIFICATION START --- */}
             {isLoggedIn ? (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 focus:outline-none"
-              >
-                Logout
-              </motion.button>
+              // NEW: Profile Dropdown Menu
+              <div className="relative" ref={profileMenuRef}>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                  className="block focus:outline-none"
+                >
+                  <img
+                    className="h-10 w-10 rounded-full object-cover border-2 border-blue-500"
+                    // Replace with actual user profile image URL
+                    src="https://lh3.googleusercontent.com/a/ACg8ocKRkKfeuqSWxgOd8NDy_R0w4sJmQX2Yg7ifP5uz2CqlowmXiYoj=s360-c-no" 
+                    alt="User profile"
+                  />
+                </motion.button>
+                <AnimatePresence>
+                  {isProfileMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-56 origin-top-right rounded-md shadow-lg bg-[#272f3f] text-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    >
+                      <div className="py-1">
+                        <Link
+                          to="/profile"
+                          onClick={() => setIsProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-700/60 transition-colors"
+                        >
+                          <User size={18} />
+                          Profile
+                        </Link>
+                        <Link
+                          to="/settings"
+                          onClick={() => setIsProfileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-700/60 transition-colors"
+                        >
+                          <Settings size={18} />
+                          Settings
+                        </Link>
+                        <button
+                          onClick={() => {
+                            toggleDarkMode();
+                            setIsProfileMenuOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-700/60 transition-colors"
+                        >
+                          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button>
+                        <div className="border-t border-gray-600/50 my-1"></div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/20 transition-colors"
+                        >
+                          <LogOut size={18} />
+                          Logout
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleLoginClick}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 focus:outline-none"
->
-  Login
-              </motion.button>
+              // Original Login/Signup buttons
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLoginClick}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400"
+                >
+                  Login
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSignupClick}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
+                >
+                  Sign Up
+                </motion.button>
+              </>
             )}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleSignupClick}
-              className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
-            >
-              Sign Up
-            </motion.button>
+            {/* --- MODIFICATION END --- */}
           </div>
+
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -204,7 +280,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu (unchanged) */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -219,7 +295,7 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <motion.div
                   key={link.to}
-                  whileHover={{ x: 5, scale: 1.05, backgroundColor: "#e5f4ed" }}
+                  whileHover={{ x: 5, scale: 1.05, backgroundColor: "#e6f3ff" }}
                   transition={{ duration: 0.2 }}
                   className="block px-3 py-2 rounded-md"
                 >
@@ -227,8 +303,8 @@ export default function Navbar() {
                     to={link.to}
                     className={`block text-base font-medium ${
                       isActive(link.to)
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400"
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -244,8 +320,8 @@ export default function Navbar() {
                     onClick={toggleDarkMode}
                     className={`p-2 rounded-full border-2 transition-all duration-200 focus:outline-none ${
                       isDarkMode
-                        ? 'bg-gray-900 border-green-400 text-yellow-300 shadow-lg'
-                        : 'bg-white border-green-600 text-green-600 shadow-lg'
+                        ? 'bg-gray-900 border-blue-400 text-yellow-300 shadow-lg'
+                        : 'bg-white border-blue-600 text-blue-600 shadow-lg'
                     }`}
                     aria-label="Toggle dark mode"
                     title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
@@ -254,38 +330,49 @@ export default function Navbar() {
                   </motion.button>
                   <div className="flex space-x-4">
                     {isLoggedIn ? (
-                      <button
-                        onClick={() => {
-                          handleLogout();
-                          setIsMenuOpen(false);
-                        }}
-                        className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400"
-                      >
-                        Logout
-                      </button>
+                      <>
+                        <Link
+                          to="/profile"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                        >
+                          Profile
+                        </Link>
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setIsMenuOpen(false);
+                          }}
+                          className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                        >
+                          Logout
+                        </button>
+                      </>
                     ) : (
-                      <Link
-                        to="/login"
-                        className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Login
-                      </Link>
+                      <>
+                        <Link
+                          to="/login"
+                          className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Login
+                        </Link>
+                        <Link
+                          to="/signup"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-500"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Sign Up
+                        </Link>
+                      </>
                     )}
-                    <Link
-                      to="/signup"
-                      className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-500"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign Up
-                    </Link>
                   </div>
                 </div>
               </div>
-    </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.nav>
   );
-}   
+}

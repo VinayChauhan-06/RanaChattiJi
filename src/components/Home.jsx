@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FaLeaf, FaTractor, FaWater, FaRoad, FaUserShield, FaChartLine, FaHandsHelping, FaClipboardList, FaSearch, FaBullhorn, FaUsers, FaGlobe } from "react-icons/fa";
+import React, { useState } from 'react';
+import { FaRoad, FaLightbulb, FaTrash, FaExclamationTriangle, FaMapMarkerAlt, FaCamera, FaMicrophone, FaCheckCircle } from "react-icons/fa";
 import { motion } from 'framer-motion';
 import Carousel from './Carousel';
 import Footer from './Footer';
@@ -8,32 +8,27 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [activeRole, setActiveRole] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   const dashboardStyles = {
-    farmer: {
-      background: "#2E7D32",
-      textColor: "#FFFFFF",
-      hoverColor: "#1B5E20",
-      borderColor: "#4CAF50",
-    },
     citizen: {
       background: "#1976D2",
       textColor: "#FFFFFF",
       hoverColor: "#1565C0",
       borderColor: "#2196F3",
     },
-    expert: {
+    track: {
       background: "#7B1FA2",
       textColor: "#FFFFFF",
       hoverColor: "#6A1B9A",
       borderColor: "#9C27B0",
     },
-    admin: {
+    trending: {
+      background: "#2E7D32",
+      textColor: "#FFFFFF",
+      hoverColor: "#1B5E20",
+      borderColor: "#4CAF50",
+    },
+    dashboard: {
       background: "#D32F2F",
       textColor: "#FFFFFF",
       hoverColor: "#C62828",
@@ -41,90 +36,89 @@ const Home = () => {
     },
   };
 
-  const roles = [
+const roles = [
+  {
+    name: "Report Issue",
+    style: dashboardStyles.citizen,
+    // Extracted from flaticon.com/free-icon/report_1450932
+    icon: "https://cdn-icons-png.flaticon.com/512/1450/1450932.png",
+    alt: "Report Icon",
+    to: "/report",
+  },
+  {
+    name: "Track My Report",
+    style: dashboardStyles.track,
+    // Kept the previously suggested icon as a link was not provided
+    icon: "https://cdn-icons-png.flaticon.com/512/2838/2838912.png",
+    alt: "Track Icon",
+    to: "/track-my-report",
+  },
+  {
+    name: "Trending Issues",
+    style: dashboardStyles.trending,
+    // Extracted from flaticon.com/free-icon/trend_6797554
+    icon: "https://cdn-icons-png.flaticon.com/512/6797/6797554.png",
+    alt: "Trending Icon",
+    to: "/trending-issue",
+  },
+  {
+    name: "Staff Dashboard",
+    style: dashboardStyles.dashboard,
+    // Extracted from icons8.com/icon/52233/admin-settings-male
+    icon: "https://img.icons8.com/fluency/96/admin-settings-male.png",
+    alt: "Dashboard Icon",
+    to: "/dashboard",
+  },
+];
+  const civicFeatures = [
     {
-      name: "Farmer Advisory",
-      style: dashboardStyles.farmer,
-      icon: "https://cdn-icons-png.flaticon.com/512/2329/2329167.png",
-      alt: "Farmer Icon",
-      to: "/farmer-dashboard",
+      icon: <FaCamera />,
+      title: "Photo Capture",
+      desc: "Click a photo of the issue with automatic location detection.",
     },
     {
-      name: "Report Issue",
-      style: dashboardStyles.citizen,
-      icon: "https://cdn-icons-png.flaticon.com/512/2329/2329167.png",
-      alt: "Citizen Icon",
-      to: "/report",
+      icon: <FaMicrophone />,
+      title: "Voice Notes",
+      desc: "Add voice descriptions for better issue documentation.",
     },
     {
-      name: "Track My Report",
-      style: dashboardStyles.expert,
-      icon: "https://cdn-icons-png.flaticon.com/512/2329/2329167.png",
-      alt: "Expert Icon",
-      to: "/track-my-report",
+      icon: <FaMapMarkerAlt />,
+      title: "Auto Location",
+      desc: "GPS automatically captures your exact location.",
     },
     {
-      name: "Trending Local Issue",
-      style: dashboardStyles.admin,
-      icon: "https://cdn-icons-png.flaticon.com/512/2329/2329167.png",
-      alt: "Admin Icon",
-      to: "/trending-issue",
+      icon: <FaCheckCircle />,
+      title: "Live Updates",
+      desc: "Get real-time status: Submitted → Acknowledged → Resolved.",
     },
   ];
 
-  const farmerFeatures = [
-    {
-      icon: <FaLeaf />,
-      title: "Crop Advisory",
-      desc: "Get expert advice on crop selection and management.",
-      to: "https://icar.org.in/advisory-stunted-growth-paddy-crop",
-    },
-    {
-      icon: <FaTractor />,
-      title: "Farm Equipment",
-      desc: "Find and rent modern farming equipment.",
-      to: "https://khetigaadi.com/",
-    },
-    {
-      icon: <FaWater />,
-      title: "Irrigation Solutions",
-      desc: "Smart irrigation techniques and water management.",
-      to: "https://pmksy.gov.in/",
-    },
-    {
-      icon: <FaChartLine />,
-      title: "Market Prices",
-      desc: "Real-time market prices and trends.",
-      to: "https://www.india.gov.in/topics/agriculture/marketing-prices",
-    },
-  ];
-
-  const citizenFeatures = [
+  const issueTypes = [
     {
       icon: <FaRoad />,
-      title: "Road Issues",
-      desc: "Report potholes and road maintenance problems.",
+      title: "Potholes",
+      desc: "Report road damage and potholes that need repair.",
     },
     {
-      icon: <FaWater />,
-      title: "Water Issues",
-      desc: "Report water leaks and supply problems.",
+      icon: <FaTrash />,
+      title: "Garbage",
+      desc: "Report uncollected waste and sanitation issues.",
     },
     {
-      icon: <FaUserShield />,
-      title: "Corruption",
-      desc: "Report corruption and malpractice.",
+      icon: <FaLightbulb />,
+      title: "Streetlights",
+      desc: "Report broken or non-functioning streetlights.",
     },
     {
-      icon: <FaHandsHelping />,
-      title: "Community Help",
-      desc: "Request and offer community assistance.",
+      icon: <FaExclamationTriangle />,
+      title: "Other Issues",
+      desc: "Report any other civic problems in your area.",
     },
   ];
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-green-900 to-blue-900 text-white">
+      <div className="min-h-screen bg-gradient-to-b from-blue-900 to-indigo-900 text-white">
         {/* Hero Section with Carousel */}
         <div className="relative">
           <Navbar />
@@ -143,7 +137,7 @@ const Home = () => {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
                 >
-                  Empowering Farmers & Citizens
+                  CivicTrack - Track Every Issue
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -151,7 +145,7 @@ const Home = () => {
                   transition={{ duration: 0.8, delay: 0.4 }}
                   className="text-xl md:text-2xl mb-8 text-gray-200"
                 >
-                  Join us in building a better community through technology
+                  Simple mobile + web app to report and track civic issues
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -162,18 +156,18 @@ const Home = () => {
                   <motion.a
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    href="/farmer-dashboard"
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300"
-                  >
-                    Farmer Portal
-                  </motion.a>
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                     href="/report"
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300"
                   >
                     Report Issue
+                  </motion.a>
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    href="/track-my-report"
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300"
+                  >
+                    Track Reports
                   </motion.a>
                 </motion.div>
               </div>
@@ -193,7 +187,7 @@ const Home = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-5xl font-bold mb-10 text-center tracking-wide text-white"
           >
-            Welcome to Bhumi Connect
+            Welcome to CivicTrack
           </motion.h2>
           
           <motion.section 
@@ -203,7 +197,8 @@ const Home = () => {
             className="mb-12 text-lg leading-relaxed text-center font-semibold text-gray-200"
           >
             <p>
-              Our platform connects farmers with agricultural experts and empowers citizens to report and resolve community issues. Together, we can build a better future for everyone.
+              People face issues daily: potholes, garbage, streetlights. Complaints often get lost or ignored. 
+              No easy way to track progress of complaints. CivicTrack solves this with a simple mobile + web app.
             </p>
           </motion.section>
 
@@ -243,18 +238,17 @@ const Home = () => {
             ))}
           </motion.div>
 
-          {/* Farmer Features Section */}
+          {/* Civic Features Section */}
           <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
             className="mb-12"
           >
-            <h2 className="text-3xl font-bold text-center mb-8 text-white">Farmer Services</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-white">How CivicTrack Works</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {farmerFeatures.map((feature, index) => (
-                <motion.a
-                  href={feature.to}
+              {civicFeatures.map((feature, index) => (
+                <motion.div
                   key={index}
                   className="bg-white/10 backdrop-blur-sm p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
                   whileHover={{ scale: 1.02 }}
@@ -265,21 +259,21 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold text-white">{feature.title}</h3>
                   <p className="mt-2 text-gray-200">{feature.desc}</p>
-                </motion.a>
+                </motion.div>
               ))}
             </div>
           </motion.section>
 
-          {/* Citizen Features Section */}
+          {/* Issue Types Section */}
           <motion.section 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
             className="mb-12"
           >
-            <h2 className="text-3xl font-bold text-center mb-8 text-white">Citizen Services</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-white">Report These Issues</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {citizenFeatures.map((feature, index) => (
+              {issueTypes.map((feature, index) => (
                 <motion.div
                   key={index}
                   className="bg-white/10 backdrop-blur-sm p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300"
@@ -306,9 +300,9 @@ const Home = () => {
             <h2 className="text-3xl font-semibold text-center mb-8 text-white">Success Stories</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { quote: "The crop advisory helped me increase my yield by 30%!", author: "Rajesh Kumar, Farmer" },
-                { quote: "Reported a water leak and it was fixed within 24 hours.", author: "Priya Sharma, Citizen" },
-                { quote: "The community support is amazing. We're solving problems together.", author: "Amit Patel, Community Leader" },
+                { quote: "Reported a pothole and it was fixed within 2 days!", author: "Rajesh Kumar, Citizen" },
+                { quote: "The garbage collection issue was resolved quickly.", author: "Priya Sharma, Resident" },
+                { quote: "CivicTrack makes it so easy to report and track issues.", author: "Amit Patel, Community Leader" },
               ].map((testimonial, index) => (
                 <motion.div
                   key={index}

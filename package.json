@@ -1,5 +1,5 @@
 {
-  "name": "reportnow",
+  "name": "civictrack",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.503.0",
+    "papaparse": "^5.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",

@@ -8,10 +8,16 @@ import ReportIssue from './components/ReportIssue/ReportIssue';
 import Hero from './components/Hero/Hero';
 import TrackMyReport from './components/TrackMyReport';
 import TrendingIssue from './components/TrendingIssue';
+import Dashboard from './components/Dashboard/Dashboard';
 
 function App() {
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}
+    >
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Nav />
         <main className="pt-16">
@@ -24,6 +30,7 @@ function App() {
             <Route path="/report" element={<ReportIssue />} />
             <Route path="/track-my-report" element={<TrackMyReport />} />
             <Route path="/trending-issue" element={<TrendingIssue />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>

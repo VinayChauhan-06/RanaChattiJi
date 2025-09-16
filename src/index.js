@@ -11,6 +11,7 @@ import ReportIssue from './components/ReportIssue/ReportIssue.jsx';
 import TrackMyReport from './components/TrackMyReport.jsx';
 import TrendingIssue from './components/TrendingIssue.jsx';
 import Contact from './components/Contact/Contact.jsx';
+import Dashboard from './components/Dashboard/Dashboard.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <Contact/>
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard/>
   }
  
 ]);

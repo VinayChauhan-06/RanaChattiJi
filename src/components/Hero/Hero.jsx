@@ -15,8 +15,8 @@ const Hero = () => {
                 transition={{ duration: 0.5 }}
                 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl"
               >
-                <span className="block">Report Issues</span>
-                <span className="block text-green-600 dark:text-green-400">Make a Difference</span>
+                <span className="block">CivicTrack</span>
+                <span className="block text-blue-600 dark:text-blue-400">Track Every Issue</span>
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -24,8 +24,8 @@ const Hero = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="mt-3 text-base text-gray-500 dark:text-gray-400 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0"
               >
-                Help improve your community by reporting issues that need attention. 
-                Our platform makes it easy to submit, track, and resolve local problems.
+                Click a photo, auto-capture location, add voice notes. Submit instantly → 
+                complaint goes to the right department. Get live updates: Submitted → Acknowledged → Resolved.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -36,7 +36,7 @@ const Hero = () => {
                 <div className="rounded-md shadow">
                   <Link
                     to="/report"
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10"
+                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
                   >
                     Report an Issue
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -45,7 +45,7 @@ const Hero = () => {
                 <div className="mt-3 sm:mt-0 sm:ml-3">
                   <Link
                     to="/about"
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 md:py-4 md:text-lg md:px-10"
+                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
                   >
                     Learn More
                   </Link>
@@ -56,7 +56,7 @@ const Hero = () => {
         </div>
       </div>
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-        <div className="h-56 w-full bg-green-600 dark:bg-green-700 sm:h-72 md:h-96 lg:w-full lg:h-full">
+        <div className="h-56 w-full bg-blue-600 dark:bg-blue-700 sm:h-72 md:h-96 lg:w-full lg:h-full">
           <div className="h-full w-full flex items-center justify-center">
             <AlertCircle className="h-32 w-32 text-white opacity-20" />
           </div>

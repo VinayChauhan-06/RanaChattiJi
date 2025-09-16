@@ -73,13 +73,24 @@ const Login = memo(() => {
         return;
       }
 
-      // Here you would typically make an API call to your backend
+      // Demo login - in real app, this would be an API call
       console.log('Login data:', formData);
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // For now, just navigate to home
+      // Demo user data - in real app, this would come from the API response
+      const userData = {
+        id: 1,
+        name: 'John Doe',
+        email: formData.email
+      };
+      
+      // Store user data and token in localStorage for demo
+      localStorage.setItem('token', 'demo-token-123');
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // Navigate to home
       navigate('/');
     } catch (err) {
       setError('Invalid email or password');
@@ -90,9 +101,21 @@ const Login = memo(() => {
 
   const handleGoogleLogin = async () => {
     try {
-      // Here you would implement Google Sign-In
+      // Demo Google login - in real app, this would implement Google Sign-In
       console.log('Google login clicked');
-      // After successful Google login, redirect to home
+      
+      // Demo user data for Google login
+      const userData = {
+        id: 1,
+        name: 'Vinay Chauahn',
+        email: 'Vinaycahuhan1352002@gmail.com'
+      };
+      
+      // Store user data and token in localStorage for demo
+      localStorage.setItem('token', 'demo-google-token-123');
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // Navigate to home
       navigate('/');
     } catch (err) {
       setError('Failed to login with Google. Please try again.');
